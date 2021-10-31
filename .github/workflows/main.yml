@@ -40,3 +40,16 @@ jobs:
     - name: Test
       run: make unittestci
 
+ win-release-64:
+    name: Windows (64 Bit)
+    runs-on: windows-latest
+    needs: linux-debug
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
+    - uses: actions/setup-python@v2
+      with:
+        python-version: '3.7'
