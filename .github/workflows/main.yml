@@ -12,9 +12,28 @@ env:
   NODE_AUTH_TOKEN: ${{secrets.NODE_AUTH_TOKEN}}
 
 jobs:
+ linux-debug:
+    name: Linux Debug
+    runs-on: ubuntu-20.04
+
+    env:
+      CC: ccache gcc-10
+      CXX: ccache g++-10
+      TREAT_WARNINGS_AS_ERRORS: 1
+      GEN: ninja
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
+    - name: Install
+      run: sudo apt-get update -y -qq && sudo apt-get install -y -qq ninja-build ccache
+
  win-release-64:
     name: Windows (64 Bit)
     runs-on: windows-latest
+    needs: linux-debug
 
     steps:
     - uses: actions/checkout@v2
