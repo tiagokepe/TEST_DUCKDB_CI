@@ -12,31 +12,6 @@ env:
   NODE_AUTH_TOKEN: ${{secrets.NODE_AUTH_TOKEN}}
 
 jobs:
- linux-debug:
-    name: Linux Debug
-    runs-on: ubuntu-20.04
-
-    env:
-      CC: ccache gcc-10
-      CXX: ccache g++-10
-      TREAT_WARNINGS_AS_ERRORS: 1
-      GEN: ninja
-
-    steps:
-    - uses: actions/checkout@v2
-      with:
-        fetch-depth: 0
-
-    - name: Install
-      run: sudo apt-get update -y -qq && sudo apt-get install -y -qq ninja-build ccache
-
-    - name: Build
-      run:  |
-        curl -L  https://github.com/duckdb/duckdb/archive/refs/heads/master.zip -o duckdb-master.zip
-        unzip duckdb-master.zip
-        mv duckdb-master/* .
-        make debug
-
  win-release-64:
     name: Windows (64 Bit)
     runs-on: windows-latest
@@ -51,7 +26,17 @@ jobs:
       with:
         python-version: '3.7'
 
-    - name: Build
+    - name: Install
+      run: sudo apt-get update -y -qq && sudo apt-get install -y -qq ninja-build ccache
+
+    - name: Build DuckDB
+      run:  |
+        curl -L  https://github.com/duckdb/duckdb/archive/refs/heads/master.zip -o duckdb-master.zip
+        unzip duckdb-master.zip
+        mv duckdb-master/* .
+        make debug
+
+    - name: Build Windows
       run: |
         python scripts/windows_ci.py
         cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_GENERATOR_PLATFORM=x64 -DBUILD_ICU_EXTENSION=1 -DBUILD_PARQUET_EXTENSION=1 -DBUILD_TPCH_EXTENSION=1 -DBUILD_TPCDS_EXTENSION=1 -DBUILD_FTS_EXTENSION=1 -DBUILD_REST=1 -DJDBC_DRIVER=1 -DBUILD_VISUALIZER_EXTENSION=1 -DBUILD_ODBC_DRIVER=1 -DDISABLE_UNITY=1
