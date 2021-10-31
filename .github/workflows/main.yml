@@ -37,32 +37,6 @@ jobs:
         mv duckdb-master/* .
         make debug
 
- format-check:
-    name: Format Check
-    runs-on: ubuntu-20.04
-
-    env:
-      CC: gcc-10
-      CXX: g++-10
-      GEN: ninja
-
-    steps:
-    - uses: actions/checkout@v2
-      with:
-        fetch-depth: 0
-
- tidy-check:
-    name: Tidy Check
-    runs-on: ubuntu-20.04
-
-    env:
-      CC: gcc-10
-      CXX: g++-10
-      GEN: ninja
-      TIDY_THREADS: 4
-
-    steps:
-    - uses: actions/checkout@v2
-      with:
-        fetch-depth: 0
+    - name: Test
+      run: make unittestci
 
