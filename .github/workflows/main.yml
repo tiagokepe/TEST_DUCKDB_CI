@@ -15,7 +15,6 @@ jobs:
  win-release-64:
     name: Windows (64 Bit)
     runs-on: windows-latest
-    needs: linux-debug
 
     steps:
     - uses: actions/checkout@v2
