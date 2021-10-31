@@ -80,10 +80,10 @@ jobs:
 
     - name: Create psqlodbc database
       run: |
-		pwd && echo "---------------------"
-		ls -la && echo "---------------------"
+        pwd && echo "---------------------"
+        ls -la && echo "---------------------"
         cd psqlodbc-main
-		ls -la && echo "---------------------"
+        ls -la && echo "---------------------"
         set PSQLODBC_TEST_DSN=DuckDB
         export PSQLODBC_TEST_DSN=DuckDB
         build\\release\\Release\\reset-db.exe < sampletables.sql
