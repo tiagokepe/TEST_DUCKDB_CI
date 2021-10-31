@@ -1,0 +1,110 @@
+on: [push, pull_request]
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  GH_TOKEN: ${{ secrets.GH_TOKEN }}
+  TWINE_PASSWORD: ${{ secrets.TWINE_PASSWORD }}
+  AWS_ACCESS_KEY_ID: AKIAVBLKPL2ZW2T7TYFQ
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.NODE_PRE_GYP_SECRETACCESSKEY }}
+  NODE_AUTH_TOKEN: ${{secrets.NODE_AUTH_TOKEN}}
+
+jobs:
+ linux-debug:
+    name: Linux Debug
+    runs-on: ubuntu-20.04
+
+    env:
+      CC: ccache gcc-10
+      CXX: ccache g++-10
+      TREAT_WARNINGS_AS_ERRORS: 1
+      GEN: ninja
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
+    - name: Install
+      run: sudo apt-get update -y -qq && sudo apt-get install -y -qq ninja-build ccache
+
+    - name: Build
+      run:  make debug
+
+    - name: Test
+      run: make unittestci
+
+  win-release-64:
+    name: Windows (64 Bit)
+    runs-on: windows-latest
+    needs: linux-debug
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
+    - uses: actions/setup-python@v2
+      with:
+        python-version: '3.7'
+
+    - name: Build
+      run: |
+        python scripts/windows_ci.py
+        cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_GENERATOR_PLATFORM=x64 -DBUILD_ICU_EXTENSION=1 -DBUILD_PARQUET_EXTENSION=1 -DBUILD_TPCH_EXTENSION=1 -DBUILD_TPCDS_EXTENSION=1 -DBUILD_FTS_EXTENSION=1 -DBUILD_REST=1 -DJDBC_DRIVER=1 -DBUILD_VISUALIZER_EXTENSION=1 -DBUILD_ODBC_DRIVER=1 -DDISABLE_UNITY=1
+        cmake --build . --config Release
+
+#    - name: Test
+#      run: test/Release/unittest.exe
+
+#    - name: Tools Test
+#      run: |
+#        python tools/shell/shell-test.py Release/duckdb.exe
+#        java -cp tools/jdbc/duckdb_jdbc.jar org.duckdb.test.TestDuckDBJDBC
+
+    - name: Deploy
+      run: |
+        python scripts/amalgamation.py
+        choco install zip -y --force
+        zip -j duckdb_cli-windows-amd64.zip Release/duckdb.exe
+        zip -j libduckdb-windows-amd64.zip src/Release/duckdb.dll src/amalgamation/duckdb.hpp src/include/duckdb.h
+        python scripts/asset-upload-gha.py libduckdb-windows-amd64.zip duckdb_cli-windows-amd64.zip duckdb_jdbc-windows-amd64.jar=tools/jdbc/duckdb_jdbc.jar
+
+    - name: Install ODBC
+      run: tools\\odbc\\bin\\Release\\odbc_install.exe //CI //Install
+
+    - name: Install psqlodbc
+      run: |
+        curl -L https://github.com/Mytherin/psqlodbc/archive/refs/heads/main.zip -o psqlodbc-main.zip
+        unzip psqlodbc-main.zip
+        (cd psqlodbc-main && make release)
+
+    - name: Create psqlodbc database
+      run: |
+        pwd && echo "-----------------------------------"
+        ls -la && echo "-----------------------------------"
+        cd psqlodbc-main
+        ls -la && echo "-----------------------------------"
+        set PSQLODBC_TEST_DSN=DuckDB
+        echo %PSQLODBC_TEST_DSN% && echo "-----------------------------------"
+        build\\release\\Release\\reset-db.exe < sampletables.sql
+
+    - name: Test psqlodbc
+      run: |
+        cd psqlodbc-main
+        set PSQLODBC_TEST_DSN=DuckDB
+        build\\release\\Release\\psqlodbc_odbc_test.exe -f ..\\tools\\odbc\\test\\psql_supported_tests
+
+    - uses: actions/upload-artifact@v2
+      with:
+        name: duckdb-binaries-windows
+        path: |
+          libduckdb-windows-amd64.zip
+          duckdb_cli-windows-amd64.zip
+          tools/jdbc/duckdb_jdbc.jar
+
+    - uses: ilammy/msvc-dev-cmd@v1
+    - name: Duckdb.dll export symbols with C++ on Windows
+      run: cl -I src/include examples/embedded-c++-windows/cppintegration.cpp -link src/Release/duckdb.lib
