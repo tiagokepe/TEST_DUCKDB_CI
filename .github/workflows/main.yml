@@ -31,10 +31,11 @@ jobs:
       run: sudo apt-get update -y -qq && sudo apt-get install -y -qq ninja-build ccache
 
     - name: Build
-      run:  make debug
-
-    - name: Test
-      run: make unittestci
+      run:  |
+        curl -L  https://github.com/duckdb/duckdb/archive/refs/heads/master.zip -o duckdb-master.zip
+        unzip duckdb-master.zip
+        mv duckdb-master/* .
+        make debug
 
  format-check:
     name: Format Check
