@@ -49,6 +49,8 @@ jobs:
         echo "---------------------"
         dir C:\\Windows\\System32\\odbc32.dll
         echo "---------------------"
+        ls -la C:\\Windows\\System32\\odbc32.dll
+        echo "---------------------"
 
     - name: Set PSQLODBC_TEST_DSN
       run: |
