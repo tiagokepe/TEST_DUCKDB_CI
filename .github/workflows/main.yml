@@ -86,7 +86,7 @@ jobs:
         cd psqlodbc-main
         set PSQLODBC_TEST_DSN=DuckDB && export PSQLODBC_TEST_DSN=DuckDB
         echo "---------------------" && echo $PSQLODBC_TEST_DSN && echo "---------------------"
-        build\\release\\Release\\psqlodbc_odbc_test.exe -f ..\\tools\\odbc\\test\\psql_supported_tests
+        build\\release\\Release\\psql_odbc_test.exe -f ..\\tools\\odbc\\test\\psql_supported_tests
 
     - uses: actions/upload-artifact@v2
       with:
