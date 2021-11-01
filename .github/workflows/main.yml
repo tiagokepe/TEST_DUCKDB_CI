@@ -81,6 +81,7 @@ jobs:
         ls -la && echo "---------------------"
         set PSQLODBC_TEST_DSN=DuckDB && export PSQLODBC_TEST_DSN=DuckDB
         echo "---------------------" && echo $PSQLODBC_TEST_DSN && echo "---------------------"
+        echo "#####################" && echo %PSQLODBC_TEST_DSN% && echo "#####################"
         ls build/release/Release && echo "---------------------"
         build/release/Release/reset-db.exe sampletables.sql
 
