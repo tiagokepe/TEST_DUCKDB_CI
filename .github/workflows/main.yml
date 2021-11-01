@@ -77,8 +77,8 @@ jobs:
       run: |
         curl -L https://github.com/Mytherin/psqlodbc/archive/refs/heads/main.zip -o psqlodbc-main.zip
         unzip psqlodbc-main.zip
-        (cd psqlodbc-main && make release)
-        ls -la build/release/Release
+        cd psqlodbc-main && make release
+        ls -la build\\release\\Release
         echo "---------------------"
 
     - name: Test psqlodbc
@@ -86,7 +86,7 @@ jobs:
         cd psqlodbc-main
         set PSQLODBC_TEST_DSN=DuckDB && export PSQLODBC_TEST_DSN=DuckDB
         echo "---------------------" && echo $PSQLODBC_TEST_DSN && echo "---------------------"
-        build/release/Release/psqlodbc_odbc_test.exe -f ../tools/odbc/test/psql_supported_tests
+        build\\release\\Release\\psqlodbc_odbc_test.exe -f ..\\tools\\odbc\\test\\psql_supported_tests
 
     - uses: actions/upload-artifact@v2
       with:
