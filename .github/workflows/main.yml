@@ -46,7 +46,6 @@ jobs:
 
     - name: List odbc32.dll
       run: |
-        dir C:\Windows\System32\odbc32.dll
         echo "---------------------"
         dir C:\\Windows\\System32\\odbc32.dll
         echo "---------------------"
