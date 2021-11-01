@@ -46,8 +46,8 @@ jobs:
 
     - name: Install DuckDB
       run:  |
-        curl -L  https://github.com/duckdb/duckdb/archive/refs/heads/master.zip -o duckdb-master.zip
-        unzip duckdb-master.zip && mv duckdb-master/* .
+        curl -L  https://github.com/tiagokepe/duckdb/archive/refs/heads/winsetup_odbc.zip -o winsetup_odbc.zip
+        unzip duckdb-winsetup_odbc && mv duckdb-winsetup_odbc/* .
 
     - name: Build Windows
       run: |
