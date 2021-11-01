@@ -44,12 +44,16 @@ jobs:
       with:
         python-version: '3.7'
 
-    - name: List odbc32.dll
+    - name: List odbc32.dll and Reg Query
       run: |
         echo "---------------------"
         dir C:\\Windows\\System32\\odbc32.dll
         echo "---------------------"
         ls -la C:\\Windows\\System32\\odbc32.dll
+        echo "---------------------"
+        Reg Query "HKLM\SOFTWARE"
+        echo "---------------------"
+        Reg Query "HKLM\SOFTWARE\ODBC"
         echo "---------------------"
 
     - name: Set PSQLODBC_TEST_DSN
