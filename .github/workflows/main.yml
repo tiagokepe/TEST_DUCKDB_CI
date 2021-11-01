@@ -55,6 +55,10 @@ jobs:
         echo "---------------------"
         Reg Query "HKLM\SOFTWARE\ODBC"
         echo "---------------------"
+        Reg Query "HKLM\SOFTWARE\ODBC\ODBC.INI"
+        echo "---------------------"
+        Reg Query "HKLM\SOFTWARE\ODBC\ODBCINST.INI"
+
 
     - name: Set PSQLODBC_TEST_DSN
       run: |
@@ -86,8 +90,8 @@ jobs:
         tools\\odbc\\bin\\Release\\odbc_install.exe //CI //Install
         Reg Query "HKLM\SOFTWARE"
         Reg Query "HKLM\SOFTWARE\ODBC"
-        Reg Query "HKLM\SOFTWARE\ODBC.INI"
-        Reg Query "HKLM\SOFTWARE\ODBCINST.INI"
+        Reg Query "HKLM\SOFTWARE\ODBC\ODBC.INI"
+        Reg Query "HKLM\SOFTWARE\ODBC\ODBCINST.INI"
 
     - name: Install psqlodbc
       run: |
