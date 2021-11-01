@@ -28,7 +28,7 @@ jobs:
         fetch-depth: 0
 
     - name: Install
-      run: sudo apt-get update -y -qq && sudo apt-get install -y -qq ninja-build ccache git
+      run: sudo apt-get update -y -qq && sudo apt-get install -y -qq ninja-build ccache git unixodbc-dev
 
  win-release-64:
     name: Windows (64 Bit)
@@ -72,6 +72,7 @@ jobs:
     - name: Install ODBC
       run:  |
         tools\\odbc\\bin\\Release\\odbc_install.exe //CI //Install
+        Reg Query "HKLM\SOFTWARE"
         Reg Query "HKLM\SOFTWARE\ODBC"
         Reg Query "HKLM\SOFTWARE\ODBC.INI"
         Reg Query "HKLM\SOFTWARE\ODBCINST.INI"
