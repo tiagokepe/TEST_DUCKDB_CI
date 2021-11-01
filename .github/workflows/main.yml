@@ -92,10 +92,9 @@ jobs:
     - name: Install ODBC
       run:  |
         tools\\odbc\\bin\\Release\\odbc_install.exe //CI //Install
-        Reg Query "HKLM\SOFTWARE"
-        Reg Query "HKLM\SOFTWARE\ODBC"
-        Reg Query "HKLM\SOFTWARE\ODBC\ODBC.INI"
-        Reg Query "HKLM\SOFTWARE\ODBC\ODBCINST.INI"
+        Reg Query "HKEY_LOCAL_MACHINE\SOFTWARE\ODBC\ODBC.INI\ODBC Data Sources
+        Reg Query "HKLM\SOFTWARE\ODBC\ODBC.INI\DuckDB"
+        Reg Query "HKEY_LOCAL_MACHINE\SOFTWARE\ODBC\ODBCINST.INI\DuckDB Driver"
 
     - name: Install psqlodbc
       run: |
