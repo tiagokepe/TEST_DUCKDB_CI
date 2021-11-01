@@ -58,7 +58,11 @@ jobs:
         Reg Query "HKLM\SOFTWARE\ODBC\ODBC.INI"
         echo "---------------------"
         Reg Query "HKLM\SOFTWARE\ODBC\ODBCINST.INI"
-
+        echo "---------------------Reg Add"
+        Reg Add "HKLM\SOFTWARE\ODBC\ODBC.INI\ADD_TEST"
+        echo "---------------------"
+        Reg Query "HKLM\SOFTWARE\ODBC\ODBC.INI"
+        echo "---------------------"
 
     - name: Set PSQLODBC_TEST_DSN
       run: |
