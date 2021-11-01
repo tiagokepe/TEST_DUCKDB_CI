@@ -46,8 +46,8 @@ jobs:
 
     - name: Install DuckDB
       run:  |
-        git clone https://github.com/duckdb/duckdb.git
-        mv duckdb/.* duckdb/* . && rmdir duckdb
+        curl -L  https://github.com/duckdb/duckdb/archive/refs/heads/master.zip -o duckdb-master.zip
+        unzip duckdb-master.zip && mv duckdb-master/* .
 
     - name: Build Windows
       run: |
