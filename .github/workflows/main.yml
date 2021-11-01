@@ -44,6 +44,12 @@ jobs:
       with:
         python-version: '3.7'
 
+    - name: Set PSQLODBC_TEST_DSN
+      run: |
+        set PSQLODBC_TEST_DSN=DuckDB && export PSQLODBC_TEST_DSN=DuckDB
+        echo "---------------------" && echo $PSQLODBC_TEST_DSN && echo "---------------------"
+        echo "#####################" && echo %PSQLODBC_TEST_DSN% && echo "#####################"
+
     - name: Install DuckDB
       run:  |
         curl -L  https://github.com/duckdb/duckdb/archive/refs/heads/master.zip -o duckdb-master.zip
