@@ -28,7 +28,7 @@ jobs:
         fetch-depth: 0
 
     - name: Install
-      run: sudo apt-get update -y -qq && sudo apt-get install -y -qq ninja-build ccache
+      run: sudo apt-get update -y -qq && sudo apt-get install -y -qq ninja-build ccache git
 
  win-release-64:
     name: Windows (64 Bit)
@@ -46,9 +46,8 @@ jobs:
 
     - name: Build DuckDB
       run:  |
-        curl -L  https://github.com/duckdb/duckdb/archive/refs/heads/master.zip -o duckdb-master.zip
-        unzip duckdb-master.zip
-        mv duckdb-master/* .
+        git clone https://github.com/duckdb/duckdb.git
+        mv duckdb/.* duckdb/* . && rmdir duckdb
         make debug
 
     - name: Build Windows
