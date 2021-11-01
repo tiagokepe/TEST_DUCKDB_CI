@@ -44,6 +44,13 @@ jobs:
       with:
         python-version: '3.7'
 
+    - name: List odbc32.dll
+      run: |
+        dir C:\Windows\System32\odbc32.dll
+        echo "---------------------"
+        dir C:\\Windows\\System32\\odbc32.dll
+        echo "---------------------"
+
     - name: Set PSQLODBC_TEST_DSN
       run: |
         set PSQLODBC_TEST_DSN=DuckDB && export PSQLODBC_TEST_DSN=DuckDB
