@@ -95,7 +95,6 @@ jobs:
         build\\release\\Release\\psql_odbc_test.exe boolsaschar-test
         build\\release\\Release\\psql_odbc_test.exe colattribute-test
         build\\release\\Release\\psql_odbc_test.exe connect-test
-        build\\release\\Release\\psql_odbc_test.exe cursor-commit-test
         build\\release\\Release\\psql_odbc_test.exe declare-fetch-block-test
         build\\release\\Release\\psql_odbc_test.exe dataatexecution-test
         build\\release\\Release\\psql_odbc_test.exe numeric-test
