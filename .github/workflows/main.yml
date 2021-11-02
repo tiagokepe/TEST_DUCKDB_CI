@@ -46,6 +46,10 @@ jobs:
 
     - name: Enable ODBC Trace
       run: |
+        Reg Query "HKCU\SOFTWARE\ODBC\"
+        echo "----------------------------------------------------------------"
+        Reg Query "HKCU\SOFTWARE\ODBC\ODBC.INI"
+        echo "----------------------------------------------------------------"
         Reg Query "HKCU\SOFTWARE\ODBC\ODBC.INI\ODBC"
         echo "----------------------------------------------------------------"
         Reg Add "HKCU\SOFTWARE\ODBC\ODBC.INI\ODBC" /f /v Trace /t REG_SZ 1
