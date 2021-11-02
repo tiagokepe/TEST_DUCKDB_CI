@@ -92,6 +92,14 @@ jobs:
         echo "----------------------------------------------------------------"
         Reg Query "HKEY_LOCAL_MACHINE\SOFTWARE\ODBC\ODBCINST.INI\DuckDB Driver"
 
+    - name: Install psqlodbc
+      run: |
+        curl -L https://github.com/Mytherin/psqlodbc/archive/refs/heads/main.zip -o psqlodbc-main.zip
+        unzip psqlodbc-main.zip
+        cd psqlodbc-main && make release
+        ls -la build\\release\\Release
+        echo "---------------------"
+
     - name: Test psqlodbc
       run: |
         cd psqlodbc-main
