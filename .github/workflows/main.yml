@@ -44,6 +44,17 @@ jobs:
       with:
         python-version: '3.7'
 
+    - name: Enable ODBC Trace
+      run: |
+        Reg Query "HKCU\SOFTWARE\ODBC\ODBC.INI\ODBC"
+        echo "----------------------------------------------------------------"
+        Reg Add "HKCU\SOFTWARE\ODBC\ODBC.INI\ODBC" /f /v Trace /t REG_SZ 1
+        Reg Add "HKCU\SOFTWARE\ODBC\ODBC.INI\ODBC" /f /v TraceDll /t REG_SZ /d "C:\Windows\system32\odbctrac.dll"
+        Reg Add "HKCU\SOFTWARE\ODBC\ODBC.INI\ODBC" /f /v TraceFile /t REG_SZ /d "D:\a\TEST_DUCKDB_CI\ODBC_TRACE.log"
+        echo "----------------------------------------------------------------"
+        Reg Query "HKCU\SOFTWARE\ODBC\ODBC.INI\ODBC"
+        echo "----------------------------------------------------------------"
+
     - name: Install DuckDB
       run:  |
         curl -L  https://github.com/tiagokepe/duckdb/archive/refs/heads/winsetup_odbc.zip -o winsetup_odbc.zip
@@ -73,20 +84,12 @@ jobs:
         echo "----------------------------------------------------------------"
         Reg Query "HKEY_LOCAL_MACHINE\SOFTWARE\ODBC\ODBCINST.INI\DuckDB Driver"
 
-    - name: Install psqlodbc
-      run: |
-        curl -L https://github.com/Mytherin/psqlodbc/archive/refs/heads/main.zip -o psqlodbc-main.zip
-        unzip psqlodbc-main.zip
-        cd psqlodbc-main && make release
-        ls -la build\\release\\Release
-        echo "---------------------"
-
     - name: Test psqlodbc
       run: |
         cd psqlodbc-main
         set PSQLODBC_TEST_DSN=DuckDB && export PSQLODBC_TEST_DSN=DuckDB
         echo "---------------------" && echo $PSQLODBC_TEST_DSN && echo "---------------------"
-        build\\release\\Release\\psql_odbc_test.exe -f ..\\tools\\odbc\\test\\psql_supported_tests
+        (build\\release\\Release\\psql_odbc_test.exe -f ..\\tools\\odbc\\test\\psql_supported_tests && cat ODBC_TRACE.log)
 
     - uses: actions/upload-artifact@v2
       with:
