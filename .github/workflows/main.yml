@@ -48,9 +48,8 @@ jobs:
       run: |
         Reg Query "HKCU\SOFTWARE"
         echo "----------------------------------------------------------------"
-        Reg Add /?
+        Reg Add "HKEY_CURRENT_USER\SOFTWARE\1ODBC\1ODBC.INI\1ODBC" /f
         echo "----------------------------------------------------------------"
-        Reg Add HKCU\SOFTWARE\1ODBC\1ODBC.INI\1ODBC /f
         Reg Query "HKCU\SOFTWARE"
         echo "----------------------------------------------------------------"
         Reg Add "HKCU\SOFTWARE\ODBC\ODBC.INI\ODBC" /f
