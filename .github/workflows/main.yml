@@ -46,13 +46,7 @@ jobs:
 
     - name: Enable ODBC Trace
       run: |
-        REG ADD /?
-        echo "----------------------------------------------------------------"
-        Reg Query "HKCU\SOFTWARE"
-        echo "----------------------------------------------------------------"
         REG ADD "HKCU\SOFTWARE\ODBC\ODBC.INI\ODBC" //f
-        echo "----------------------------------------------------------------"
-        Reg Query "HKCU\SOFTWARE"
         echo "----------------------------------------------------------------"
         Reg Query "HKCU\SOFTWARE\ODBC\ODBC.INI\ODBC"
         echo "----------------------------------------------------------------"
@@ -61,7 +55,6 @@ jobs:
         Reg Add "HKCU\SOFTWARE\ODBC\ODBC.INI\ODBC" //v TraceFile //t REG_SZ //d "D:\a\TEST_DUCKDB_CI\ODBC_TRACE.log"
         echo "----------------------------------------------------------------"
         Reg Query "HKCU\SOFTWARE\ODBC\ODBC.INI\ODBC"
-        echo "----------------------------------------------------------------"
 
     - name: Install DuckDB
       run:  |
@@ -73,14 +66,6 @@ jobs:
         python scripts/windows_ci.py
         cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_GENERATOR_PLATFORM=x64 -DBUILD_ICU_EXTENSION=1 -DBUILD_PARQUET_EXTENSION=1 -DBUILD_FTS_EXTENSION=1 -DBUILD_ODBC_DRIVER=1 -DDISABLE_UNITY=1
         cmake --build . --config Release
-
-#    - name: Deploy
-#      run: |
-#        python scripts/amalgamation.py
-#        choco install zip -y --force
-#        zip -j duckdb_cli-windows-amd64.zip Release/duckdb.exe
-#        zip -j libduckdb-windows-amd64.zip src/Release/duckdb.dll src/amalgamation/duckdb.hpp src/include/duckdb.h
-#        python scripts/asset-upload-gha.py libduckdb-windows-amd64.zip duckdb_cli-windows-amd64.zip duckdb_jdbc-windows-amd64.jar=tools/jdbc/duckdb_jdbc.jar
 
     - name: Install ODBC
       run:  |
@@ -105,7 +90,11 @@ jobs:
         cd psqlodbc-main
         set PSQLODBC_TEST_DSN=DuckDB && export PSQLODBC_TEST_DSN=DuckDB
         echo "---------------------" && echo $PSQLODBC_TEST_DSN && echo "---------------------"
-        (build\\release\\Release\\psql_odbc_test.exe -f ..\\tools\\odbc\\test\\psql_supported_tests && cat ODBC_TRACE.log)
+        build\\release\\Release\\psql_odbc_test.exe -f ..\\tools\\odbc\\test\\psql_supported_tests
+
+    - name: Cat ODBC trace
+      if: always()
+      run: cat ODBC_TRACE.log
 
     - uses: actions/upload-artifact@v2
       with:
