@@ -89,8 +89,7 @@ jobs:
     - name: Test psqlodbc
       run: |
         cd psqlodbc-main
-        set PSQLODBC_TEST_DSN=DuckDB && export PSQLODBC_TEST_DSN=DuckDB
-        echo "---------------------" && echo $PSQLODBC_TEST_DSN && echo "---------------------"
+        export PSQLODBC_TEST_DSN=DuckDB
         build\\release\\Release\\psql_odbc_test.exe alter-test
         build\\release\\Release\\psql_odbc_test.exe boolsaschar-test
         build\\release\\Release\\psql_odbc_test.exe colattribute-test
